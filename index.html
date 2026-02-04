@@ -21,70 +21,20 @@
   </script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-
-    .box {
-      max-width: 500px;
-      background: #fff;
-      margin: auto;
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .question {
-      display: none;
-    }
-
-    .question.active {
-      display: block;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      cursor: pointer;
-      background: #fff;
-    }
-
-    .cta {
-      background: #28a745;
-      color: #fff;
-      border: none;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .footer {
-      margin-top: 20px;
-    }
-
-    .footer img {
-      max-width: 120px;
-      opacity: 0.7;
-    }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+    .box { max-width: 500px; background: #fff; margin: auto; padding: 20px; border-radius: 8px; text-align: center; }
+    .question { display: none; }
+    .question.active { display: block; }
+    button { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; cursor: pointer; background: #fff; }
+    .cta { background: #28a745; color: #fff; border: none; }
+    input { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
+    .footer { margin-top: 20px; }
+    .footer img { max-width: 120px; opacity: 0.7; }
   </style>
 </head>
 
 <body>
-
 <div class="box">
-
   <h2>Responda rápido 👇</h2>
 
   <!-- PERGUNTA 1 -->
@@ -95,7 +45,7 @@
     <button onclick="next()">Nunca tentei</button>
   </div>
 
-  <!-- PERGUNTA 2 (ATUALIZADA) -->
+  <!-- PERGUNTA 2 -->
   <div class="question">
     <p><strong>Qual sua maior dificuldade?</strong></p>
     <button onclick="next()">Troca de acordes</button>
@@ -110,7 +60,6 @@
 
     <input id="email" type="email" placeholder="Seu e-mail (obrigatório)">
     <input id="whatsapp" type="text" placeholder="WhatsApp com DDD (opcional)">
-
     <button class="cta" onclick="enviarLead()">Ver resultado</button>
   </div>
 
@@ -121,17 +70,13 @@
       Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
       é ideal para você. Clique no botão abaixo e saiba mais!
     </p>
-
-    <button class="cta" onclick="irParaOferta()">
-      Acessar o Método Violão em 8 Semanas
-    </button>
+    <button class="cta" onclick="irParaOferta()">Acessar o Método Violão em 8 Semanas</button>
   </div>
 
   <!-- LOGO -->
   <div class="footer">
     <img src="1700453890630.png" alt="Violão Básico e Simples">
   </div>
-
 </div>
 
 <script>
@@ -145,27 +90,40 @@
   }
 
   function enviarLead() {
-    const email = document.getElementById("email").value;
-    const whatsapp = document.getElementById("whatsapp").value;
+    const email = document.getElementById("email").value.trim();
+    const whatsapp = document.getElementById("whatsapp").value.trim();
+
+    // Regex básico de email válido
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Lista de emails claramente falsos
+    const invalidos = ["teste@teste.com", "email@email.com", "a@a.com", "aa@aa.com"];
 
     if (!email) {
       alert("Digite seu e-mail para continuar");
       return;
     }
 
+    if (!emailRegex.test(email)) {
+      alert("Digite um e-mail válido");
+      return;
+    }
+
+    if (invalidos.includes(email.toLowerCase())) {
+      alert("Digite um e-mail real para continuar");
+      return;
+    }
+
+    // Se passou na validação, considera lead qualificado
+    fbq("track", "LeadQualificado");
+
+    // Envia para Formspree
     fetch("https://formspree.io/f/mgozgpyq", {
       method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email: email,
-        whatsapp: whatsapp
-      })
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email, whatsapp: whatsapp })
     }).then(() => {
-      fbq("track", "Lead");
-      next();
+      next(); // Mostra resultado
     }).catch(() => {
       alert("Erro ao enviar. Tente novamente.");
     });
@@ -176,6 +134,5 @@
     window.location.href = "https://go.hotmart.com/H26135771I?ap=e723";
   }
 </script>
-
 </body>
 </html>
