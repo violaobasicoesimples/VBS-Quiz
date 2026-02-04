@@ -36,11 +36,6 @@
       text-align: center;
     }
 
-    h1 {
-      font-size: 22px;
-      margin-bottom: 10px;
-    }
-
     .question {
       display: none;
     }
@@ -54,24 +49,16 @@
       padding: 12px;
       margin-top: 10px;
       font-size: 16px;
-      cursor: pointer;
       border-radius: 6px;
       border: 1px solid #ccc;
+      cursor: pointer;
       background: #fff;
-    }
-
-    button:hover {
-      background: #f0f0f0;
     }
 
     .cta {
       background: #28a745;
       color: #fff;
       border: none;
-    }
-
-    .cta:hover {
-      background: #218838;
     }
 
     input {
@@ -85,7 +72,6 @@
 
     .footer {
       margin-top: 20px;
-      text-align: center;
     }
 
     .footer img {
@@ -99,7 +85,7 @@
 
 <div class="box">
 
-  <h1>Responda rápido 👇</h1>
+  <h2>Responda rápido 👇</h2>
 
   <!-- PERGUNTA 1 -->
   <div class="question active">
@@ -109,31 +95,31 @@
     <button onclick="next()">Nunca tentei</button>
   </div>
 
-  <!-- PERGUNTA 2 -->
+  <!-- PERGUNTA 2 (ATUALIZADA) -->
   <div class="question">
     <p><strong>Qual sua maior dificuldade?</strong></p>
-    <button onclick="next()">Trocar acordes</button>
+    <button onclick="next()">Troca de acordes</button>
     <button onclick="next()">Ritmo</button>
     <button onclick="next()">Falta de tempo</button>
+    <button onclick="next()">Outros motivos</button>
   </div>
 
   <!-- CAPTURA DE LEAD -->
   <div class="question">
-    <p><strong>Antes de ver o resultado, deixe seu contato 👇</strong></p>
+    <p><strong>Antes do resultado, deixe seu contato 👇</strong></p>
 
-    <form id="leadForm">
-      <input type="email" name="email" placeholder="Seu e-mail (obrigatório)" required>
-      <input type="text" name="whatsapp" placeholder="WhatsApp (opcional)">
-      <button type="submit" class="cta">Ver resultado</button>
-    </form>
+    <input id="email" type="email" placeholder="Seu e-mail (obrigatório)">
+    <input id="whatsapp" type="text" placeholder="WhatsApp (opcional)">
+
+    <button class="cta" onclick="enviarLead()">Ver resultado</button>
   </div>
 
   <!-- RESULTADO -->
   <div class="question">
-    <h2>Resultado</h2>
+    <h3>Resultado</h3>
     <p>
       Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
-      é perfeito para você.
+      é ideal para você aprender do zero, mesmo com pouco tempo.
     </p>
 
     <button class="cta" onclick="irParaOferta()">
@@ -141,44 +127,52 @@
     </button>
   </div>
 
-  <!-- LOGO RODAPÉ -->
+  <!-- LOGO -->
   <div class="footer">
-    <img src="1700453890630.png" alt="Violão Básico Simples">
+    <img src="1700453890630.png" alt="Violão Básico e Simples">
   </div>
 
 </div>
 
 <script>
   let current = 0;
-  const questions = document.querySelectorAll('.question');
+  const questions = document.querySelectorAll(".question");
 
   function next() {
-    questions[current].classList.remove('active');
+    questions[current].classList.remove("active");
     current++;
-    questions[current].classList.add('active');
+    questions[current].classList.add("active");
   }
 
-  document.getElementById("leadForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+  function enviarLead() {
+    const email = document.getElementById("email").value;
+    const whatsapp = document.getElementById("whatsapp").value;
 
-    const formData = new FormData(this);
+    if (!email) {
+      alert("Digite seu e-mail para continuar");
+      return;
+    }
 
     fetch("https://formspree.io/f/mgozgpyq", {
       method: "POST",
-      body: formData,
       headers: {
-        'Accept': 'application/json'
-      }
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        whatsapp: whatsapp
+      })
     }).then(() => {
-      fbq('track', 'Lead');
+      fbq("track", "Lead");
       next();
     }).catch(() => {
       alert("Erro ao enviar. Tente novamente.");
     });
-  });
+  }
 
   function irParaOferta() {
-    fbq('track', 'ViewContent');
+    fbq("track", "ViewContent");
     window.location.href = "https://go.hotmart.com/H26135771I?ap=e723";
   }
 </script>
