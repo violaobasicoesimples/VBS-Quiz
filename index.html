@@ -1,148 +1,173 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Descubra o melhor jeito de aprender violão</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz de Violão</title>
 
-<!-- PIXEL META -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '770436035819931');
-fbq('track', 'PageView');
-</script>
+  <!-- PIXEL META -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-  padding: 20px;
-}
-.box {
-  max-width: 500px;
-  background: #fff;
-  margin: auto;
-  padding: 20px;
-  border-radius: 8px;
-}
-h1 {
-  text-align: center;
-}
-.question {
-  display: none;
-}
-.question.active {
-  display: block;
-}
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  font-size: 16px;
-}
-.cta {
-  background: #28a745;
-  color: #fff;
-  border: none;
-}
-</style>
+    fbq('init', '770436035819931');
+    fbq('track', 'PageView');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .question {
+      margin: 20px 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 6px;
+      background: #00c853;
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .cta {
+      background: #ffcc00;
+      color: #000;
+      font-size: 18px;
+      margin-top: 15px;
+    }
+
+    footer {
+      margin-top: 40px;
+      opacity: 0.7;
+    }
+
+    footer img {
+      max-width: 120px;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
 
-<div class="box">
-<h1>Responda rápido 👇</h1>
+    <h1>🎸 Quiz de Violão</h1>
+    <p>Responda e veja se esse método é ideal para você</p>
 
-<div class="question active">
-  <p><strong>Você já tentou aprender violão?</strong></p>
-  <button onclick="next()">Sim, mas desisti</button>
-  <button onclick="next()">Estou começando agora</button>
-  <button onclick="next()">Nunca tentei</button>
-</div>
+    <!-- PERGUNTA -->
+    <div id="quiz">
+      <div class="question">
+        <p>Você já tentou aprender violão antes?</p>
+        <button onclick="nextStep()">Sim</button>
+        <button onclick="nextStep()">Não</button>
+      </div>
+    </div>
 
-<div class="question">
-  <p><strong>Qual sua maior dificuldade?</strong></p>
-  <button onclick="next()">Trocar acordes</button>
-  <button onclick="next()">Ritmo</button>
-  <button onclick="next()">Falta de tempo</button>
-  <button onclick="next()">Outros</button>
-</div>
+    <!-- FORMULÁRIO -->
+    <div id="form" class="hidden">
+      <p>
+        Antes de ver o resultado final,  
+        preencha o campo abaixo 👇  
+        <br><small>E-mail obrigatório • WhatsApp opcional</small>
+      </p>
 
-<div class="question">
-  <p><strong>Quanto tempo por dia você consegue treinar?</strong></p>
-  <button onclick="next()">10 minutos</button>
-  <button onclick="next()">20 minutos</button>
-  <button onclick="next()">30+ minutos</button>
-</div>
+      <form action="https://formspree.io/f/mgozgpyq" method="POST">
+        <input type="email" name="email" placeholder="Seu melhor e-mail" required>
+        <input type="text" name="whatsapp" placeholder="Seu WhatsApp (opcional)">
+        <button type="submit">Ver meu resultado</button>
+      </form>
+    </div>
 
-<!-- CAPTURA DE LEAD -->
-<div class="question">
-  <p><strong>Antes do resultado final 👇</strong></p>
-  <p>Preencha para receber a recomendação ideal:</p>
+    <!-- RESULTADO -->
+    <div id="result" class="hidden result">
+      <p>
+        ✅ <strong>Com base nas suas respostas, o método Violão em 8 semanas é perfeito para você!</strong>
+        <br><br>
+        Quer conhecer ou saber mais sobre ele?
+        Clique no botão abaixo 👇
+      </p>
 
-  <form action="https://formspree.io/f/mgozgpyq" method="POST" onsubmit="saveLead()">
-    <input type="email" name="email" placeholder="Seu melhor e-mail" required>
-    <input type="tel" name="whatsapp" placeholder="Seu WhatsApp (com DDD)" required>
-    <button type="submit">Ver meu resultado</button>
-  </form>
+      <button class="cta" onclick="goToOffer()">
+        Acesse o Método Violão em 8 Semanas
+      </button>
+    </div>
 
-  <p style="font-size:12px;margin-top:10px;">
-    Seus dados estão seguros. Não enviamos spam.
-  </p>
-</div>
+    <!-- RODAPÉ COM LOGO -->
+    <footer>
+      <img src="1700453890630.png" alt="Violão Básico e Simples">
+    </footer>
 
-<!-- RESULTADO -->
-<div class="question">
-  <h2>Resultado</h2>
-  <p>
-    Com base nas suas respostas, o método
-    <strong>Violão em 8 semanas</strong> é perfeito para você!
-  </p>
+  </div>
 
-  <a href="https://go.hotmart.com/H26135771I?ap=e723" target="_blank">
-    <button class="cta" onclick="viewContent()">
-      Método Violão em 8 semanas
-    </button>
-  </a>
-</div>
+  <script>
+    function nextStep() {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("form").classList.remove("hidden");
+    }
 
-</div>
+    // Após envio do form (Formspree redireciona de volta)
+    if (window.location.search.includes("success")) {
+      document.getElementById("form").classList.add("hidden");
+      document.getElementById("result").classList.remove("hidden");
+    }
 
-<script>
-let current = 0;
-const questions = document.querySelectorAll('.question');
-
-function next() {
-  questions[current].classList.remove('active');
-  current++;
-  questions[current].classList.add('active');
-}
-
-function saveLead() {
-  fbq('track', 'Lead');
-  setTimeout(() => {
-    next();
-  }, 500);
-}
-
-function viewContent() {
-  fbq('track', 'ViewContent');
-}
-</script>
+    function goToOffer() {
+      fbq('track', 'ViewContent');
+      window.location.href = "https://go.hotmart.com/H26135771I?ap=e723";
+    }
+  </script>
 
 </body>
 </html>
