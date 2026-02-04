@@ -1,139 +1,147 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Descubra o melhor jeito de aprender violão</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Descubra o melhor jeito de aprender violão</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- PIXEL META -->
-  <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '770436035819931');
-    fbq('track', 'PageView');
-  </script>
+<!-- PIXEL META -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '770436035819931');
+fbq('track', 'PageView');
+</script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .box {
-      max-width: 500px;
-      background: #fff;
-      margin: auto;
-      padding: 20px;
-      border-radius: 8px;
-    }
-    h1, h2 {
-      text-align: center;
-    }
-    .question {
-      display: none;
-    }
-    .question.active {
-      display: block;
-    }
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-      border: none;
-    }
-    .cta {
-      background: #28a745;
-      color: #fff;
-      font-weight: bold;
-    }
-  </style>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  padding: 20px;
+}
+.box {
+  max-width: 500px;
+  background: #fff;
+  margin: auto;
+  padding: 20px;
+  border-radius: 8px;
+}
+h1 {
+  text-align: center;
+}
+.question {
+  display: none;
+}
+.question.active {
+  display: block;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  font-size: 16px;
+}
+.cta {
+  background: #28a745;
+  color: #fff;
+  border: none;
+}
+</style>
 </head>
 
 <body>
 
 <div class="box">
+<h1>Responda rápido 👇</h1>
 
-  <h1>Responda rápido 👇</h1>
+<div class="question active">
+  <p><strong>Você já tentou aprender violão?</strong></p>
+  <button onclick="next()">Sim, mas desisti</button>
+  <button onclick="next()">Estou começando agora</button>
+  <button onclick="next()">Nunca tentei</button>
+</div>
 
-  <!-- PERGUNTA 1 -->
-  <div class="question active">
-    <p><strong>Você já tentou aprender violão?</strong></p>
-    <button onclick="next()">Sim, mas desisti</button>
-    <button onclick="next()">Estou começando agora</button>
-    <button onclick="next()">Nunca tentei</button>
-  </div>
+<div class="question">
+  <p><strong>Qual sua maior dificuldade?</strong></p>
+  <button onclick="next()">Trocar acordes</button>
+  <button onclick="next()">Ritmo</button>
+  <button onclick="next()">Falta de tempo</button>
+  <button onclick="next()">Outros</button>
+</div>
 
-  <!-- PERGUNTA 2 -->
-  <div class="question">
-    <p><strong>Qual sua maior dificuldade?</strong></p>
-    <button onclick="next()">Trocar acordes</button>
-    <button onclick="next()">Ritmo</button>
-    <button onclick="next()">Falta de tempo</button>
-    <button onclick="next()">Outros</button>
-  </div>
+<div class="question">
+  <p><strong>Quanto tempo por dia você consegue treinar?</strong></p>
+  <button onclick="next()">10 minutos</button>
+  <button onclick="next()">20 minutos</button>
+  <button onclick="next()">30+ minutos</button>
+</div>
 
-  <!-- PERGUNTA 3 -->
-  <div class="question">
-    <p><strong>Quanto tempo por dia você consegue treinar?</strong></p>
-    <button onclick="finish()">10 minutos</button>
-    <button onclick="finish()">20 minutos</button>
-    <button onclick="finish()">30+ minutos</button>
-  </div>
+<!-- CAPTURA DE LEAD -->
+<div class="question">
+  <p><strong>Antes do resultado final 👇</strong></p>
+  <p>Preencha para receber a recomendação ideal:</p>
 
-  <!-- RESULTADO ÚNICO -->
-  <div class="question">
-    <h2>🎸 Resultado</h2>
+  <form action="https://formspree.io/f/mgozgpyq" method="POST" onsubmit="saveLead()">
+    <input type="email" name="email" placeholder="Seu melhor e-mail" required>
+    <input type="tel" name="whatsapp" placeholder="Seu WhatsApp (com DDD)" required>
+    <button type="submit">Ver meu resultado</button>
+  </form>
 
-    <p>
-      Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
-      é perfeito para você!
-    </p>
+  <p style="font-size:12px;margin-top:10px;">
+    Seus dados estão seguros. Não enviamos spam.
+  </p>
+</div>
 
-    <p>
-      Quer conhecer ou saber mais sobre ele?
-      Clique no botão abaixo 👇
-    </p>
+<!-- RESULTADO -->
+<div class="question">
+  <h2>Resultado</h2>
+  <p>
+    Com base nas suas respostas, o método
+    <strong>Violão em 8 semanas</strong> é perfeito para você!
+  </p>
 
-    <button class="cta" onclick="goToSalesPage()">
-      Método Violão em 8 Semanas
+  <a href="https://go.hotmart.com/H26135771I?ap=e723" target="_blank">
+    <button class="cta" onclick="viewContent()">
+      Método Violão em 8 semanas
     </button>
-  </div>
+  </a>
+</div>
 
 </div>
 
 <script>
-  let current = 0;
-  const questions = document.querySelectorAll('.question');
+let current = 0;
+const questions = document.querySelectorAll('.question');
 
-  function next() {
-    questions[current].classList.remove('active');
-    current++;
-    questions[current].classList.add('active');
-  }
+function next() {
+  questions[current].classList.remove('active');
+  current++;
+  questions[current].classList.add('active');
+}
 
-  function finish() {
-    fbq('track', 'Lead');
+function saveLead() {
+  fbq('track', 'Lead');
+  setTimeout(() => {
     next();
-  }
+  }, 500);
+}
 
-  function goToSalesPage() {
-    // Evento quando a pessoa clica e vai para a página de vendas
-    fbq('track', 'ViewContent');
-
-    // Pequeno atraso para garantir o disparo do evento
-    setTimeout(function () {
-      window.location.href = "https://go.hotmart.com/H26135771I?ap=e723";
-    }, 300);
-  }
+function viewContent() {
+  fbq('track', 'ViewContent');
+}
 </script>
 
 </body>
