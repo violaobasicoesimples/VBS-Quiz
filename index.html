@@ -32,8 +32,7 @@
       padding: 20px;
       border-radius: 8px;
     }
-    h1 {
-      font-size: 22px;
+    h1, h2 {
       text-align: center;
     }
     .question {
@@ -44,15 +43,17 @@
     }
     button {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin-top: 10px;
       font-size: 16px;
       cursor: pointer;
+      border-radius: 5px;
+      border: none;
     }
     .cta {
       background: #28a745;
       color: #fff;
-      border: none;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -60,8 +61,10 @@
 <body>
 
 <div class="box">
+
   <h1>Responda rápido 👇</h1>
 
+  <!-- PERGUNTA 1 -->
   <div class="question active">
     <p><strong>Você já tentou aprender violão?</strong></p>
     <button onclick="next()">Sim, mas desisti</button>
@@ -69,14 +72,16 @@
     <button onclick="next()">Nunca tentei</button>
   </div>
 
+  <!-- PERGUNTA 2 -->
   <div class="question">
     <p><strong>Qual sua maior dificuldade?</strong></p>
     <button onclick="next()">Trocar acordes</button>
     <button onclick="next()">Ritmo</button>
-    <button onclick="next()">Dor nos dedos</button>
     <button onclick="next()">Falta de tempo</button>
+    <button onclick="next()">Outros</button>
   </div>
 
+  <!-- PERGUNTA 3 -->
   <div class="question">
     <p><strong>Quanto tempo por dia você consegue treinar?</strong></p>
     <button onclick="finish()">10 minutos</button>
@@ -84,17 +89,25 @@
     <button onclick="finish()">30+ minutos</button>
   </div>
 
+  <!-- RESULTADO ÚNICO -->
   <div class="question">
-    <h2>Resultado</h2>
+    <h2>🎸 Resultado</h2>
+
     <p>
-      Com base nas suas respostas, o ideal é um método
-      passo a passo para iniciantes, com treinos curtos
-      e sem teoria complicada.
+      Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
+      é perfeito para você!
     </p>
-    <a href="https://go.hotmart.com/H26135771I?ap=e723">
-      <button class="cta">Ver método recomendado</button>
-    </a>
+
+    <p>
+      Quer conhecer ou saber mais sobre ele?
+      Clique no botão abaixo 👇
+    </p>
+
+    <button class="cta" onclick="goToSalesPage()">
+      Acesse o Método Violão em 8 Semanas
+    </button>
   </div>
+
 </div>
 
 <script>
@@ -111,7 +124,17 @@
     fbq('track', 'Lead');
     next();
   }
+
+  function goToSalesPage() {
+    // Evento quando a pessoa clica e vai para a página de vendas
+    fbq('track', 'ViewContent');
+
+    // Pequeno atraso para garantir o disparo do evento
+    setTimeout(function () {
+      window.location.href = "https://go.hotmart.com/H26135771I?ap=e723";
+    }, 300);
+  }
 </script>
 
 </body>
-  </html>
+</html>
