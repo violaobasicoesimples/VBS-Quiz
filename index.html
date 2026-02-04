@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Quiz Violão Básico e Simples</title>
+  <title>Quiz – Violão Básico Simples</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- PIXEL META -->
@@ -15,6 +15,7 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
+
     fbq('init', '770436035819931');
     fbq('track', 'PageView');
   </script>
@@ -25,6 +26,7 @@
       background: #f5f5f5;
       padding: 20px;
     }
+
     .box {
       max-width: 500px;
       background: #fff;
@@ -33,15 +35,20 @@
       border-radius: 8px;
       text-align: center;
     }
+
     h1 {
       font-size: 22px;
+      margin-bottom: 10px;
     }
+
     .question {
       display: none;
     }
+
     .question.active {
       display: block;
     }
+
     button {
       width: 100%;
       padding: 12px;
@@ -50,26 +57,40 @@
       cursor: pointer;
       border-radius: 6px;
       border: 1px solid #ccc;
-      background: #f2f2f2;
+      background: #fff;
     }
+
+    button:hover {
+      background: #f0f0f0;
+    }
+
     .cta {
       background: #28a745;
       color: #fff;
       border: none;
     }
+
+    .cta:hover {
+      background: #218838;
+    }
+
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 10px;
       font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
-    footer {
+
+    .footer {
       margin-top: 20px;
       text-align: center;
     }
-    footer img {
-      max-width: 140px;
-      opacity: 0.8;
+
+    .footer img {
+      max-width: 120px;
+      opacity: 0.7;
     }
   </style>
 </head>
@@ -98,9 +119,9 @@
 
   <!-- CAPTURA DE LEAD -->
   <div class="question">
-    <p><strong>Para ver o resultado, deixe seu melhor contato:</strong></p>
+    <p><strong>Antes de ver o resultado, deixe seu contato 👇</strong></p>
 
-    <form id="leadForm" action="https://formspree.io/f/mgozgpyq" method="POST">
+    <form id="leadForm">
       <input type="email" name="email" placeholder="Seu e-mail (obrigatório)" required>
       <input type="text" name="whatsapp" placeholder="WhatsApp (opcional)">
       <button type="submit" class="cta">Ver resultado</button>
@@ -112,7 +133,7 @@
     <h2>Resultado</h2>
     <p>
       Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
-      é perfeito para você aprender do zero, mesmo com pouco tempo.
+      é perfeito para você.
     </p>
 
     <button class="cta" onclick="irParaOferta()">
@@ -120,9 +141,10 @@
     </button>
   </div>
 
-  <footer>
-    <img src="1700453890630.png" alt="Violão Básico e Simples">
-  </footer>
+  <!-- LOGO RODAPÉ -->
+  <div class="footer">
+    <img src="1700453890630.png" alt="Violão Básico Simples">
+  </div>
 
 </div>
 
@@ -136,11 +158,23 @@
     questions[current].classList.add('active');
   }
 
-  document.getElementById("leadForm").addEventListener("submit", function() {
-    fbq('track', 'Lead');
-    setTimeout(() => {
+  document.getElementById("leadForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch("https://formspree.io/f/mgozgpyq", {
+      method: "POST",
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    }).then(() => {
+      fbq('track', 'Lead');
       next();
-    }, 300);
+    }).catch(() => {
+      alert("Erro ao enviar. Tente novamente.");
+    });
   });
 
   function irParaOferta() {
