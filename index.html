@@ -21,15 +21,15 @@ fbq('track', 'PageView');
 </script>
 
 <style>
-body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-.box { max-width: 500px; background: #fff; margin: auto; padding: 20px; border-radius: 8px; text-align: center; }
-.question { display: none; }
-.question.active { display: block; }
-button { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; cursor: pointer; background: #fff; }
-.cta { background: #28a745; color: #fff; border: none; }
-input { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
-.footer { margin-top: 20px; }
-.footer img { max-width: 120px; opacity: 0.7; }
+body {font-family: Arial;background:#f5f5f5;padding:20px;}
+.box {max-width:500px;background:#fff;margin:auto;padding:20px;border-radius:8px;text-align:center;}
+.question {display:none;}
+.question.active {display:block;}
+button {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;cursor:pointer;background:#fff;}
+.cta {background:#28a745;color:#fff;border:none;}
+input {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;}
+.footer {margin-top:20px;}
+.footer img {max-width:120px;opacity:0.7;}
 </style>
 </head>
 
@@ -37,6 +37,7 @@ input { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; border-ra
 <div class="box">
 <h2>Responda rápido 👇</h2>
 
+<!-- PERGUNTA 1 -->
 <div class="question active">
 <p><strong>Você já tentou aprender violão?</strong></p>
 <button onclick="next()">Sim, mas desisti</button>
@@ -44,6 +45,7 @@ input { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; border-ra
 <button onclick="next()">Nunca tentei</button>
 </div>
 
+<!-- PERGUNTA 2 -->
 <div class="question">
 <p><strong>Qual sua maior dificuldade?</strong></p>
 <button onclick="next()">Troca de acordes</button>
@@ -52,24 +54,33 @@ input { width: 100%; padding: 12px; margin-top: 10px; font-size: 16px; border-ra
 <button onclick="next()">Outros motivos</button>
 </div>
 
+<!-- CAPTURA DE LEAD -->
 <div class="question">
 <p><strong>Antes do resultado, deixe seu contato 👇</strong></p>
+
 <input id="email" type="email" placeholder="Seu e-mail (obrigatório)">
 <input id="whatsapp" type="text" placeholder="WhatsApp com DDD (opcional)">
+<input id="palavra" type="text" placeholder="Palavra do vídeo (obrigatório)">
+
 <button class="cta" onclick="enviarLead()">Ver resultado</button>
 </div>
 
+<!-- RESULTADO -->
 <div class="question">
 <h3>Resultado</h3>
 <p>
 Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
-é ideal para você. Clique abaixo para saber mais!
+é ideal para você. Clique no botão abaixo e saiba mais!
 </p>
-<button class="cta" onclick="irParaOferta()">Acessar o Método Violão em 8 Semanas</button>
+
+<button class="cta" onclick="irParaOferta()">
+Acessar o Método Violão em 8 Semanas
+</button>
 </div>
 
+<!-- LOGO -->
 <div class="footer">
-<img src="1700453890630.png">
+<img src="1700453890630.png" alt="Violão Básico e Simples">
 </div>
 </div>
 
@@ -77,51 +88,46 @@ Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
 let current = 0;
 const questions = document.querySelectorAll(".question");
 
-/* CAPTURA ORIGEM */
-const urlParams = new URLSearchParams(window.location.search);
-const origem = urlParams.get("src") || "organico";
-
-function next() {
+function next(){
 questions[current].classList.remove("active");
 current++;
 questions[current].classList.add("active");
 }
 
-function enviarLead() {
+function enviarLead(){
+
 const email = document.getElementById("email").value.trim();
 const whatsapp = document.getElementById("whatsapp").value.trim();
+const palavra = document.getElementById("palavra").value.trim().toUpperCase();
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const invalidos = ["teste@teste.com","email@email.com","a@a.com","aa@aa.com"];
 
-if (!email) { alert("Digite seu e-mail"); return; }
-if (!emailRegex.test(email)) { alert("Digite um e-mail válido"); return; }
-if (invalidos.includes(email.toLowerCase())) { alert("Digite um e-mail real"); return; }
+if(!email){ alert("Digite seu e-mail"); return; }
+if(!emailRegex.test(email)){ alert("Digite um e-mail válido"); return; }
+if(invalidos.includes(email.toLowerCase())){ alert("Digite um e-mail real"); return; }
 
-/* PIXEL LEAD COM ORIGEM */
-fbq("track","LeadQualificado",{source: origem});
+if(!palavra){
+alert("Digite a palavra do vídeo para liberar o resultado");
+return;
+}
 
-/* ENVIA PARA FORMSPREE */
+fbq("track","LeadQualificado",{palavra_video: palavra});
+
 fetch("https://formspree.io/f/mgozgpyq",{
 method:"POST",
-headers:{ "Accept":"application/json","Content-Type":"application/json"},
-body:JSON.stringify({
-email:email,
-whatsapp:whatsapp,
-origem:origem
+headers:{"Accept":"application/json","Content-Type":"application/json"},
+body:JSON.stringify({email:email,whatsapp:whatsapp,palavra_video:palavra})
 })
-}).then(()=>{ next(); })
+.then(()=>{ next(); })
 .catch(()=>{ alert("Erro ao enviar"); });
 }
 
-function irParaOferta() {
-
-/* PIXEL CLIQUE */
-fbq("track","ViewContent",{source: origem});
-
-/* ENVIA ORIGEM PRA HOTMART */
-window.location.href="https://go.hotmart.com/H26135771I?ap=4c69&src="+origem;
+function irParaOferta(){
+fbq("track","ViewContent");
+window.location.href="https://go.hotmart.com/H26135771I?ap=4c69";
 }
 </script>
+
 </body>
 </html>
