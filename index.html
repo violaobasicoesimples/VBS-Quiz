@@ -37,7 +37,6 @@ input{width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;b
 <div class="box">
 <h2>Responda rápido 👇</h2>
 
-<!-- PERGUNTA 1 -->
 <div class="question active">
 <p><strong>Você já tentou aprender violão?</strong></p>
 <button onclick="responderNivel('nunca')">Nunca tentei</button>
@@ -46,7 +45,6 @@ input{width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;b
 <button onclick="responderNivel('hard')">Já toco mas quero evoluir</button>
 </div>
 
-<!-- PERGUNTA 2 -->
 <div class="question">
 <p><strong>Qual sua maior dificuldade?</strong></p>
 <button onclick="responderDificuldade('acordes')">Troca de acordes</button>
@@ -55,7 +53,6 @@ input{width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;b
 <button onclick="responderDificuldade('dor_dedo')">Dor nos dedos</button>
 </div>
 
-<!-- LEAD -->
 <div class="question">
 <p><strong>Antes do resultado 👇</strong></p>
 <input id="email" type="email" placeholder="Seu e-mail (obrigatório)">
@@ -64,7 +61,6 @@ input{width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;b
 <button class="cta" onclick="enviarLead()">Ver resultado</button>
 </div>
 
-<!-- RESULTADO -->
 <div class="question">
 <h3>Resultado</h3>
 <p>
@@ -124,7 +120,7 @@ if(!ddds.includes(ddd))return true;
 return false;
 }
 
-/* ===== ENVIO ===== */
+/* ===== ENVIO COM LEAD SCORING ===== */
 
 function enviarLead(){
 
@@ -140,15 +136,39 @@ if(!emailRegex.test(email)){alert("E-mail inválido");return;}
 if(emailFake(email)){alert("Digite um e-mail real");return;}
 if(whatsapp && telefoneFake(whatsapp)){alert("WhatsApp inválido");return;}
 
-fbq("track","LeadQualificado",{origem:origem,nivel:nivel,dificuldade:dificuldade,palavra:palavra});
+/* ===== LEAD SCORING ===== */
+let pontos=0;
 
+if(nivel=="travado") pontos+=3;
+else if(nivel=="iniciante") pontos+=2;
+else if(nivel=="nunca") pontos+=1;
+else if(nivel=="hard") pontos+=2;
+
+if(dificuldade=="acordes") pontos+=3;
+else if(dificuldade=="ritmo") pontos+=2;
+else if(dificuldade=="tempo") pontos+=1;
+
+let tipoLead="frio";
+if(pontos>=5) tipoLead="quente";
+else if(pontos>=3) tipoLead="morno";
+
+/* PIXEL INTELIGENTE */
+fbq("track","Lead_"+tipoLead,{
+origem:origem,
+nivel:nivel,
+dificuldade:dificuldade,
+pontuacao:pontos,
+palavra:palavra
+});
+
+/* ENVIO FORM */
 fetch("https://formspree.io/f/mgozgpyq",{
 method:"POST",
 headers:{"Accept":"application/json","Content-Type":"application/json"},
-body:JSON.stringify({email,whatsapp,origem,nivel,dificuldade,palavra})
+body:JSON.stringify({email,whatsapp,origem,nivel,dificuldade,palavra,tipoLead,pontos})
 })
 .then(()=>{next();})
-.catch(()=>{alert("Erro ao enviar");});
+.catch(()=>{next();}); // mesmo com erro não trava
 }
 
 function irParaOferta(){
