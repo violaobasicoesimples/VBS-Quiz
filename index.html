@@ -68,12 +68,11 @@ input {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;
 <h3>Resultado</h3>
 <p>
 Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
-é perfeito para você!
+é ideal para você.
 </p>
-<button class="cta" onclick="irParaOferta()">Acessar o Método Violão em 8 Semanas</button>
+<button class="cta" onclick="irParaOferta()">Acessar o Método</button>
 </div>
 
-<!-- LOGO -->
 <div class="footer">
 <img src="1700453890630.png" alt="Violão Básico e Simples">
 </div>
@@ -106,13 +105,19 @@ const palavraInput=document.getElementById("palavra").value.trim();
 const palavra=palavraInput?palavraInput.toUpperCase():"nao_informado";
 
 const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 if(!email){alert("Digite seu e-mail");return;}
 if(!emailRegex.test(email)){alert("Digite um e-mail válido");return;}
 
 // pixel
-fbq("track","LeadQualificado",{origem:origem,nivel:nivel,dificuldade:dificuldade,palavra:palavra});
+fbq("track","LeadQualificado",{
+origem:origem,
+nivel:nivel,
+dificuldade:dificuldade,
+palavra:palavra
+});
 
-// formspree FORM DATA
+// envia para Formspree
 const formData=new FormData();
 formData.append("email",email);
 formData.append("whatsapp",whatsapp);
@@ -123,14 +128,26 @@ formData.append("palavra_video",palavra);
 
 fetch("https://formspree.io/f/mgozgpyq",{
 method:"POST",
+headers:{
+"Accept":"application/json"
+},
 body:formData
 })
-.then(()=>{next();})
-.catch(()=>{alert("Erro ao enviar");});
+.then(response=>{
+next(); // mesmo se der erro ele continua
+})
+.catch(()=>{
+next(); // nunca trava o usuário
+});
 }
 
 function irParaOferta(){
-fbq("track","ViewContent",{origem:origem,nivel:nivel,dificuldade:dificuldade});
+fbq("track","ViewContent",{
+origem:origem,
+nivel:nivel,
+dificuldade:dificuldade
+});
+
 window.location.href="https://go.hotmart.com/H26135771I?ap=4c69&src="+origem+"_"+nivel+"_"+dificuldade;
 }
 </script>
