@@ -63,10 +63,7 @@ input{width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;b
 
 <div class="question">
 <h3>Resultado</h3>
-<p>
-Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
-é ideal para você.
-</p>
+<p>Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong> é ideal para você.</p>
 <button class="cta" onclick="irParaOferta()">Acessar o Método</button>
 </div>
 
@@ -93,21 +90,37 @@ q[current].classList.add("active");
 function responderNivel(n){nivel=n;next();}
 function responderDificuldade(d){dificuldade=d;next();}
 
-/* ===== VALIDAÇÕES ===== */
-
+/* ===== EMAIL HARD FILTER ===== */
 function emailFake(email){
-const proibidos=["teste","test","email","exemplo","aaa","abc","123","qwe"];
-const dominiosTemp=["tempmail","10minutemail","guerrillamail","mailinator","sharklasers","dispostable","yopmail"];
 
 email=email.toLowerCase();
 
-for(let p of proibidos){if(email.includes(p+"@"))return true;}
-for(let d of dominiosTemp){if(email.includes(d))return true;}
-if(/(.)\1{4,}/.test(email))return true;
+const proibidos=["teste","test","email","exemplo","aaa","abc","123","qwe"];
+const dominiosTemp=["tempmail","10minutemail","guerrillamail","mailinator","sharklasers","dispostable","yopmail"];
+
+for(let p of proibidos){
+ if(email.includes(p+"@")) return true;
+}
+
+// bloqueia teste1, teste2, teste999
+if(/teste\d*@/.test(email)) return true;
+
+for(let d of dominiosTemp){
+ if(email.includes(d)) return true;
+}
+
+if(/(.)\1{4,}/.test(email)) return true;
+
+let nome=email.split("@")[0];
+
+if(nome.length<4) return true;
+if(/^\d+$/.test(nome)) return true;
+if(/^(asd|qwe|zxc)/.test(nome)) return true;
 
 return false;
 }
 
+/* ===== TELEFONE FILTER ===== */
 function telefoneFake(fone){
 let n=fone.replace(/\D/g,'');
 if(n.length<10||n.length>11)return true;
@@ -120,8 +133,7 @@ if(!ddds.includes(ddd))return true;
 return false;
 }
 
-/* ===== ENVIO COM LEAD SCORING ===== */
-
+/* ===== ENVIO ===== */
 function enviarLead(){
 
 const email=document.getElementById("email").value.trim();
@@ -136,39 +148,22 @@ if(!emailRegex.test(email)){alert("E-mail inválido");return;}
 if(emailFake(email)){alert("Digite um e-mail real");return;}
 if(whatsapp && telefoneFake(whatsapp)){alert("WhatsApp inválido");return;}
 
-/* ===== LEAD SCORING ===== */
-let pontos=0;
+fbq("track","LeadQualificado",{origem:origem,nivel:nivel,dificuldade:dificuldade,palavra:palavra});
 
-if(nivel=="travado") pontos+=3;
-else if(nivel=="iniciante") pontos+=2;
-else if(nivel=="nunca") pontos+=1;
-else if(nivel=="hard") pontos+=2;
-
-if(dificuldade=="acordes") pontos+=3;
-else if(dificuldade=="ritmo") pontos+=2;
-else if(dificuldade=="tempo") pontos+=1;
-
-let tipoLead="frio";
-if(pontos>=5) tipoLead="quente";
-else if(pontos>=3) tipoLead="morno";
-
-/* PIXEL INTELIGENTE */
-fbq("track","Lead_"+tipoLead,{
-origem:origem,
-nivel:nivel,
-dificuldade:dificuldade,
-pontuacao:pontos,
-palavra:palavra
-});
-
-/* ENVIO FORM */
 fetch("https://formspree.io/f/mgozgpyq",{
 method:"POST",
 headers:{"Accept":"application/json","Content-Type":"application/json"},
-body:JSON.stringify({email,whatsapp,origem,nivel,dificuldade,palavra,tipoLead,pontos})
+body:JSON.stringify({
+email:email,
+whatsapp:whatsapp,
+origem:origem,
+nivel:nivel,
+dificuldade:dificuldade,
+palavra_video:palavra
+})
 })
 .then(()=>{next();})
-.catch(()=>{next();}); // mesmo com erro não trava
+.catch(()=>{alert("Erro ao enviar");});
 }
 
 function irParaOferta(){
