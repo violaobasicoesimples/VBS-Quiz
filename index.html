@@ -21,15 +21,15 @@ fbq('track', 'PageView');
 </script>
 
 <style>
-body {font-family: Arial;background:#f5f5f5;padding:20px;}
-.box {max-width:500px;background:#fff;margin:auto;padding:20px;border-radius:8px;text-align:center;}
-.question {display:none;}
-.question.active {display:block;}
-button {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;cursor:pointer;background:#fff;}
-.cta {background:#28a745;color:#fff;border:none;}
-input {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;}
-.footer {margin-top:20px;}
-.footer img {max-width:120px;opacity:0.7;}
+body{font-family:Arial;background:#f5f5f5;padding:20px;}
+.box{max-width:500px;background:#fff;margin:auto;padding:20px;border-radius:8px;text-align:center;}
+.question{display:none;}
+.question.active{display:block;}
+button{width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;cursor:pointer;background:#fff;}
+.cta{background:#28a745;color:#fff;border:none;}
+input{width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;}
+.footer{margin-top:20px;}
+.footer img{max-width:120px;opacity:0.7;}
 </style>
 </head>
 
@@ -54,7 +54,7 @@ input {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;
 <button onclick="responderDificuldade('dor_dedo')">Dor nos dedos</button>
 </div>
 
-<!-- CAPTURA -->
+<!-- LEAD -->
 <div class="question">
 <p><strong>Antes do resultado 👇</strong></p>
 <input id="email" type="email" placeholder="Seu e-mail (obrigatório)">
@@ -70,7 +70,6 @@ input {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;
 <button class="cta" onclick="irParaOferta()">Acessar o Método</button>
 </div>
 
-<!-- LOGO -->
 <div class="footer">
 <img src="1700453890630.png">
 </div>
@@ -79,7 +78,6 @@ input {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;
 <script>
 let current=0;
 const q=document.querySelectorAll(".question");
-
 let nivel="";
 let dificuldade="";
 
@@ -95,62 +93,64 @@ q[current].classList.add("active");
 function responderNivel(n){nivel=n;next();}
 function responderDificuldade(d){dificuldade=d;next();}
 
-async function enviarLead(){
+/* ===== VALIDAÇÕES ===== */
+
+function emailFake(email){
+const proibidos=["teste","test","email","exemplo","aaa","abc","123","qwe"];
+const dominiosTemp=["tempmail","10minutemail","guerrillamail","mailinator","sharklasers","dispostable","yopmail"];
+
+email=email.toLowerCase();
+
+for(let p of proibidos){if(email.includes(p+"@"))return true;}
+for(let d of dominiosTemp){if(email.includes(d))return true;}
+if(/(.)\1{4,}/.test(email))return true;
+
+return false;
+}
+
+function telefoneFake(fone){
+let n=fone.replace(/\D/g,'');
+if(n.length<10||n.length>11)return true;
+if(/^(\d)\1+$/.test(n))return true;
+
+const ddds=[11,12,13,14,15,16,17,18,19,21,22,24,27,28,31,32,33,34,35,37,38,41,42,43,44,45,46,47,48,49,51,53,54,55,61,62,63,64,65,66,67,68,69,71,73,74,75,77,79,81,82,83,84,85,86,87,88,89,91,92,93,94,95,96,97,98,99];
+let ddd=parseInt(n.substring(0,2));
+if(!ddds.includes(ddd))return true;
+
+return false;
+}
+
+/* ===== ENVIO ===== */
+
+function enviarLead(){
 
 const email=document.getElementById("email").value.trim();
 const whatsapp=document.getElementById("whatsapp").value.trim();
 const palavraInput=document.getElementById("palavra").value.trim();
 const palavra=palavraInput?palavraInput.toUpperCase():"nao_informado";
 
-if(!email){
-alert("Digite seu e-mail");
-return;
-}
+const emailRegex=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-try{
+if(!email){alert("Digite seu e-mail");return;}
+if(!emailRegex.test(email)){alert("E-mail inválido");return;}
+if(emailFake(email)){alert("Digite um e-mail real");return;}
+if(whatsapp && telefoneFake(whatsapp)){alert("WhatsApp inválido");return;}
 
-const response = await fetch("https://formspree.io/f/mgozgpyq",{
+fbq("track","LeadQualificado",{origem:origem,nivel:nivel,dificuldade:dificuldade,palavra:palavra});
+
+fetch("https://formspree.io/f/mgozgpyq",{
 method:"POST",
-headers:{
-"Accept":"application/json",
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-email:email,
-whatsapp:whatsapp,
-origem:origem,
-nivel:nivel,
-dificuldade:dificuldade,
-palavra:palavra
+headers:{"Accept":"application/json","Content-Type":"application/json"},
+body:JSON.stringify({email,whatsapp,origem,nivel,dificuldade,palavra})
 })
-});
-
-if(response.ok){
-
-fbq("track","LeadQualificado",{
-origem:origem,
-nivel:nivel,
-dificuldade:dificuldade,
-palavra:palavra
-});
-
-next();
-
-}else{
-alert("Falha ao enviar, tente novamente");
-}
-
-}catch(e){
-alert("Conexão instável, tente novamente");
-}
-
+.then(()=>{next();})
+.catch(()=>{alert("Erro ao enviar");});
 }
 
 function irParaOferta(){
-fbq("track","ViewContent",{origem:origem});
+fbq("track","ViewContent",{origem:origem,nivel:nivel,dificuldade:dificuldade});
 window.location.href="https://go.hotmart.com/H26135771I?ap=4c69&src="+origem+"_"+nivel+"_"+dificuldade;
 }
 </script>
-
 </body>
 </html>
