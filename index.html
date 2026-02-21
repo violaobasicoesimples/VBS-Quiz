@@ -60,7 +60,7 @@ input {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;
 
 <input id="email" type="email" placeholder="Seu e-mail (obrigatório)">
 <input id="whatsapp" type="text" placeholder="WhatsApp com DDD (opcional)">
-<input id="palavra" type="text" placeholder="Palavra do vídeo (obrigatório)">
+<input id="palavra" type="text" placeholder="Palavra do vídeo (opcional)">
 
 <button class="cta" onclick="enviarLead()">Ver resultado</button>
 </div>
@@ -88,6 +88,10 @@ Acessar o Método Violão em 8 Semanas
 let current = 0;
 const questions = document.querySelectorAll(".question");
 
+// captura origem automática
+const params = new URLSearchParams(window.location.search);
+const origem = params.get("src") || "direto";
+
 function next(){
 questions[current].classList.remove("active");
 current++;
@@ -98,7 +102,8 @@ function enviarLead(){
 
 const email = document.getElementById("email").value.trim();
 const whatsapp = document.getElementById("whatsapp").value.trim();
-const palavra = document.getElementById("palavra").value.trim().toUpperCase();
+const palavraInput = document.getElementById("palavra").value.trim();
+const palavra = palavraInput ? palavraInput.toUpperCase() : "nao_informado";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const invalidos = ["teste@teste.com","email@email.com","a@a.com","aa@aa.com"];
@@ -107,24 +112,26 @@ if(!email){ alert("Digite seu e-mail"); return; }
 if(!emailRegex.test(email)){ alert("Digite um e-mail válido"); return; }
 if(invalidos.includes(email.toLowerCase())){ alert("Digite um e-mail real"); return; }
 
-if(!palavra){
-alert("Digite a palavra do vídeo para liberar o resultado");
-return;
-}
+// envia pixel
+fbq("track","LeadQualificado",{origem:origem,palavra_video:palavra});
 
-fbq("track","LeadQualificado",{palavra_video: palavra});
-
+// envia formspree
 fetch("https://formspree.io/f/mgozgpyq",{
 method:"POST",
 headers:{"Accept":"application/json","Content-Type":"application/json"},
-body:JSON.stringify({email:email,whatsapp:whatsapp,palavra_video:palavra})
+body:JSON.stringify({
+email:email,
+whatsapp:whatsapp,
+palavra_video:palavra,
+origem:origem
+})
 })
 .then(()=>{ next(); })
 .catch(()=>{ alert("Erro ao enviar"); });
 }
 
 function irParaOferta(){
-fbq("track","ViewContent");
+fbq("track","ViewContent",{origem:origem});
 window.location.href="https://go.hotmart.com/H26135771I?ap=4c69";
 }
 </script>
