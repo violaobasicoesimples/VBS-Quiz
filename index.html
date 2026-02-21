@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!DOCTYPE html><html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <title>Quiz – Violão Básico Simples</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- PIXEL META -->
-<script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -18,9 +14,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 
 fbq('init', '770436035819931');
 fbq('track', 'PageView');
-</script>
-
-<style>
+</script><style>
 body {font-family: Arial;background:#f5f5f5;padding:20px;}
 .box {max-width:500px;background:#fff;margin:auto;padding:20px;border-radius:8px;text-align:center;}
 .question {display:none;}
@@ -30,111 +24,74 @@ button {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px
 input {width:100%;padding:12px;margin-top:10px;font-size:16px;border-radius:6px;border:1px solid #ccc;}
 .footer {margin-top:20px;}
 .footer img {max-width:120px;opacity:0.7;}
-</style>
-</head>
-
-<body>
+</style></head><body>
 <div class="box">
-<h2>Responda rápido 👇</h2>
-
-<!-- PERGUNTA 1 -->
-<div class="question active">
+<h2>Responda rápido 👇</h2><div class="question active">
 <p><strong>Você já tentou aprender violão?</strong></p>
-<button onclick="next()">Sim, mas desisti</button>
-<button onclick="next()">Estou começando agora</button>
-<button onclick="next()">Nunca tentei</button>
-</div>
-
-<!-- PERGUNTA 2 -->
-<div class="question">
+<button onclick="responderNivel('nunca')">Nunca tentei</button>
+<button onclick="responderNivel('iniciante')">Estou começando</button>
+<button onclick="responderNivel('travado')">Já tentei mas travo</button>
+</div><div class="question">
 <p><strong>Qual sua maior dificuldade?</strong></p>
-<button onclick="next()">Troca de acordes</button>
-<button onclick="next()">Ritmo</button>
-<button onclick="next()">Falta de tempo</button>
-<button onclick="next()">Outros motivos</button>
-</div>
-
-<!-- CAPTURA DE LEAD -->
-<div class="question">
-<p><strong>Antes do resultado, deixe seu contato 👇</strong></p>
-
+<button onclick="responderDificuldade('acordes')">Troca de acordes</button>
+<button onclick="responderDificuldade('ritmo')">Ritmo</button>
+<button onclick="responderDificuldade('tempo')">Falta de tempo</button>
+<button onclick="responderDificuldade('dor_dedo')">Dor nos dedos</button>
+</div><div class="question">
+<p><strong>Antes do resultado 👇</strong></p>
 <input id="email" type="email" placeholder="Seu e-mail (obrigatório)">
-<input id="whatsapp" type="text" placeholder="WhatsApp com DDD (opcional)">
+<input id="whatsapp" type="text" placeholder="WhatsApp (opcional)">
 <input id="palavra" type="text" placeholder="Palavra do vídeo (opcional)">
-
 <button class="cta" onclick="enviarLead()">Ver resultado</button>
-</div>
-
-<!-- RESULTADO -->
-<div class="question">
+</div><div class="question">
 <h3>Resultado</h3>
-<p>
-Com base nas suas respostas, o <strong>Método Violão em 8 Semanas</strong>
-é ideal para você. Clique no botão abaixo e saiba mais!
-</p>
-
-<button class="cta" onclick="irParaOferta()">
-Acessar o Método Violão em 8 Semanas
-</button>
+<p>Esse método foi feito exatamente para o seu perfil 👇</p>
+<button class="cta" onclick="irParaOferta()">Acessar o Método</button>
+</div><div class="footer">
+<img src="1700453890630.png">
 </div>
+</div><script>
+let current=0;
+const q=document.querySelectorAll(".question");
+let nivel="";
+let dificuldade="";
 
-<!-- LOGO -->
-<div class="footer">
-<img src="1700453890630.png" alt="Violão Básico e Simples">
-</div>
-</div>
+const params=new URLSearchParams(window.location.search);
+const origem=params.get("src")||"direto";
 
-<script>
-let current = 0;
-const questions = document.querySelectorAll(".question");
+function next(){q[current].classList.remove("active");current++;q[current].classList.add("active");}
 
-// captura origem automática
-const params = new URLSearchParams(window.location.search);
-const origem = params.get("src") || "direto";
-
-function next(){
-questions[current].classList.remove("active");
-current++;
-questions[current].classList.add("active");
-}
+function responderNivel(n){nivel=n;next();}
+function responderDificuldade(d){dificuldade=d;next();}
 
 function enviarLead(){
+const email=document.getElementById("email").value.trim();
+const whatsapp=document.getElementById("whatsapp").value.trim();
+const palavraInput=document.getElementById("palavra").value.trim();
+const palavra=palavraInput?palavraInput.toUpperCase():"nao_informado";
 
-const email = document.getElementById("email").value.trim();
-const whatsapp = document.getElementById("whatsapp").value.trim();
-const palavraInput = document.getElementById("palavra").value.trim();
-const palavra = palavraInput ? palavraInput.toUpperCase() : "nao_informado";
+if(!email){alert("Digite seu e-mail");return;}
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const invalidos = ["teste@teste.com","email@email.com","a@a.com","aa@aa.com"];
+fbq("track","LeadQualificado",{origem:origem,nivel:nivel,dificuldade:dificuldade,palavra:palavra});
 
-if(!email){ alert("Digite seu e-mail"); return; }
-if(!emailRegex.test(email)){ alert("Digite um e-mail válido"); return; }
-if(invalidos.includes(email.toLowerCase())){ alert("Digite um e-mail real"); return; }
-
-// envia pixel
-fbq("track","LeadQualificado",{origem:origem,palavra_video:palavra});
-
-// envia formspree
 fetch("https://formspree.io/f/mgozgpyq",{
 method:"POST",
 headers:{"Accept":"application/json","Content-Type":"application/json"},
 body:JSON.stringify({
 email:email,
 whatsapp:whatsapp,
-palavra_video:palavra,
-origem:origem
+origem:origem,
+nivel:nivel,
+dificuldade:dificuldade,
+palavra:palavra
 })
 })
-.then(()=>{ next(); })
-.catch(()=>{ alert("Erro ao enviar"); });
+.then(()=>{next();})
+.catch(()=>{alert("Erro ao enviar");});
 }
 
 function irParaOferta(){
-fbq("track","ViewContent",{origem:origem});
-window.location.href="https://go.hotmart.com/H26135771I?ap=4c69";
+window.location.href="https://go.hotmart.com/H26135771I?ap=4c69&src="+origem+"_"+nivel+"_"+dificuldade;
 }
-</script>
-
-</body>
+</script></body>
 </html>
